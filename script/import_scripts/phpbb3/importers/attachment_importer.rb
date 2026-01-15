@@ -22,13 +22,18 @@ module ImportScripts::PhpBB3
       rows.each do |row|
         path = File.join(@attachment_path, row[:physical_filename])
         filename = CGI.unescapeHTML(row[:real_filename])
+        description = row[:attach_comment]&.strip
+
         upload = @uploader.create_upload(user_id, path, filename)
 
         if upload.nil? || !upload.persisted?
           puts "Failed to upload #{path}"
           puts upload.errors.inspect if upload
         else
-          attachments << @uploader.html_for_upload(upload, filename)
+          attachments << {
+            html: @uploader.html_for_upload(upload, filename),
+            description: description.presence,
+          }
         end
       end
 

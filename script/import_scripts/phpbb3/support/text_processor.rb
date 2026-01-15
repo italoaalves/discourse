@@ -175,7 +175,15 @@ module ImportScripts::PhpBB3
         index = $1.to_i
         real_filename = $2
         unreferenced_attachments[index] = nil
-        attachments.fetch(index, real_filename)
+
+        html = attachment[:html]
+        description = attachment[:description]
+
+        if description.present?
+          "#{html}\n\n_#{description}_"
+        else
+          html
+        end
       end
 
       add_unreferenced_attachments(text, unreferenced_attachments)
