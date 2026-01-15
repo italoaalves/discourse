@@ -193,7 +193,10 @@ module ImportScripts::PhpBB3
       return text unless unreferenced_attachments
 
       unreferenced_attachments = unreferenced_attachments.compact
-      text << "\n" << unreferenced_attachments.join("\n") unless unreferenced_attachments.empty?
+      unless unreferenced_attachments.empty?
+        text << "\n" <<
+          unreferenced_attachments.html.join("\n\n#{unreferenced_attachments.description}\n")
+      end
       text
     end
 
